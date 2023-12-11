@@ -332,11 +332,11 @@ impl<T> Collection<T> {
     ///
     /// See the documentation [here](https://www.mongodb.com/docs/manual/aggregation/) for more
     /// information on aggregations.
-    pub async fn aggregate(
+    pub async fn aggregate<U>(
         &self,
         pipeline: impl IntoIterator<Item = Document>,
         options: impl Into<Option<AggregateOptions>>,
-    ) -> Result<Cursor<Document>> {
+    ) -> Result<Cursor<U>> {
         let mut options = options.into();
         resolve_options!(
             self,
@@ -353,12 +353,12 @@ impl<T> Collection<T> {
     ///
     /// See the documentation [here](https://www.mongodb.com/docs/manual/aggregation/) for more
     /// information on aggregations.
-    pub async fn aggregate_with_session(
+    pub async fn aggregate_with_session<U>(
         &self,
         pipeline: impl IntoIterator<Item = Document>,
         options: impl Into<Option<AggregateOptions>>,
         session: &mut ClientSession,
-    ) -> Result<SessionCursor<Document>> {
+    ) -> Result<SessionCursor<U>> {
         let mut options = options.into();
         resolve_read_concern_with_session!(self, options, Some(&mut *session))?;
         resolve_write_concern_with_session!(self, options, Some(&mut *session))?;
